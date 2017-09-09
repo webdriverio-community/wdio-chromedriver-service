@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/atti187/wdio-chromedriver-service#readme",
   "dependencies": {
-    "chromedriver": "^2.29.0",
+    "chromedriver": "^2.31.0",
     "fs-extra": "^0.30.0"
   },
   "devDependencies": {
