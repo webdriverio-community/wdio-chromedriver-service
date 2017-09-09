@@ -1,6 +1,6 @@
 {
   "name": "wdio-chromedriver-service",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WebdriverIO service to start & stop ChromeDriver",
   "main": "index.js",
   "scripts": {
