@@ -34,6 +34,12 @@ You can simple do it by:
 npm install wdio-chromedriver-service --save-dev
 ```
 
+Note! You have to install [chromedriver](https://www.npmjs.com/package/chromedriver)  separately, as it's a peerDependency of this project, and you're free to choose what version to use. Install it using:
+
+```bash
+npm install chromedriver --save-dev
+```
+
 Instructions on how to install `WebdriverIO` can be found [here.](http://webdriver.io/guide/getstarted/install.html)
 
 ## Configuration
@@ -47,16 +53,24 @@ export.config = {
   path: '/',
   // ...
   services: ['chromedriver'],
+  chromeDriverArgs: ['--port=9999'],
+  chromeDriverLogs: './',
   // ...
 };
 ```
 
 ## Options
 
+### chromeDriverArgs
+Array of arguments to pass to the ChromeDriver executable, see [https://helpmanual.io/help/chromedriver](https://helpmanual.io/help/chromedriver).
+
+Type: `string[]`
 ### chromeDriverLogs
 Path where all logs from the ChromeDriver server should be stored.
 
-Type: `String`
+Type: `string`
+
+
 
 ----
 
