@@ -9,9 +9,9 @@ const FILE_EXTENSION_REGEX = /\.[0-9a-z]+$/i
  * @return {String}                 absolute file path
  */
 export default function getFilePath (filePath, defaultFilename) {
-    let absolutePath = path.join(process.cwd(), filePath)
+    let absolutePath = path.resolve(filePath)
 
-    // test if we already have a file (e.g. ChromeDriver.txt, .log, log.txt, etc.)
+    // test if we already have a file (e.g. selenium.txt, .log, log.txt, etc.)
     // NOTE: path.extname doesn't work to detect a file, cause dotfiles are reported by node to have no extension
     if (!FILE_EXTENSION_REGEX.test(path.basename(absolutePath))) {
         absolutePath = path.join(absolutePath, defaultFilename)

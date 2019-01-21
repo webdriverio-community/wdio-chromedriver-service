@@ -1,1 +1,6 @@
-lib
+src
+tests
+coverage
+babel.config.js
+ChromeDriver.txt
+.*

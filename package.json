@@ -1,14 +1,21 @@
 {
   "name": "wdio-chromedriver-service",
-  "version": "0.1.3",
+  "version": "5.0.0",
   "description": "WebdriverIO service to start & stop ChromeDriver",
-  "main": "index.js",
+  "author": "Mattias Ekstrand <mattias.ekstrand@gmail.com>",
+  "homepage": "https://github.com/atti187/wdio-chromedriver-service#readme",
+  "license": "MIT",
+  "main": "./build",
+  "engines": {
+    "node": ">= 4.8.5"
+  },
   "scripts": {
-    "build": "grunt build",
-    "prepublishOnly": "npm prune && npm run build",
-    "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "mocha --compilers js:babel-register --recursive test/unit",
-    "test:integration": "wdio test/integration/wdio.conf.js"
+    "build": "NODE_ENV=production run-s clean compile",
+    "clean": "rimraf ./build",
+    "compile": "babel src/ -d build/ --config-file ./babel.config.js",
+    "test": "run-s test:*",
+    "test:eslint": "eslint src test",
+    "test:unit": "jest"
   },
   "repository": {
     "type": "git",
@@ -21,41 +28,70 @@
     "chromedriver",
     "tests"
   ],
-  "author": "",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/atti187/wdio-chromedriver-service/issues"
   },
-  "homepage": "https://github.com/atti187/wdio-chromedriver-service#readme",
   "peerDependencies": {
-    "chromedriver": "^2.31.0"
+    "chromedriver": "^2.45.0",
+    "@wdio/cli": "^5.0.0"
   },
   "dependencies": {
     "fs-extra": "^0.30.0"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-register": "^6.7.2",
-    "chromedriver": "^2.31.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/plugin-proposal-function-bind": "^7.0.0",
+    "@babel/plugin-proposal-optional-catch-binding": "^7.2.0",
+    "@babel/plugin-syntax-export-default-from": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "babel-plugin-source-map-support": "^2.0.1",
+    "chromedriver": "^2.45.0",
     "eslint": "^2.5.1",
     "eslint-config-standard": "^5.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-promise": "^1.1.0",
     "eslint-plugin-standard": "^1.3.2",
-    "grunt": "^0.4.5",
-    "grunt-bump": "^0.6.0",
-    "grunt-babel": "^6.0.0",
-    "grunt-cli": "^1.1.0",
-    "grunt-npm": "0.0.2",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-eslint": "^18.0.0",
-    "load-grunt-tasks": "^3.4.1",
+    "jest": "^23.6.0",
     "mocha": "^2.5.3",
-    "wdio-mocha-framework": "^0.2.12",
-    "webdriverio": "^4.0.7"
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "wdio-mocha-framework": "^0.2.12"
   },
   "contributors": [
     "Mattias Ekstrand <mattias.ekstrand@gmail.com>"
-  ]
+  ],
+  "jest": {
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ],
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 95,
+        "functions": 96,
+        "lines": 96,
+        "statements": 96
+      }
+    },
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "node_modules/",
+      "packages/webdriverio/src/scripts",
+      "packages/wdio-devtools-service/src/lighthouse",
+      "packages/webdriverio/build",
+      "packages/webdriver/build"
+    ]
+  }
 }

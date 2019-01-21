@@ -1,7 +1,9 @@
 WDIO ChromeDriver Service
 ================================
 
-(Based entirely on [wdio-selenium-standalone-service](https://github.com/webdriverio/wdio-selenium-standalone-service).)
+(Based entirely on [wdio-selenium-standalone-service](https://github.com/webdriverio/webdriverio/tree/master/packages/wdio-selenium-standalone-service).)
+
+Note - starting with version 5.0.0, this service is targeted at WDIO v5. If you're working with WDIO v4, use latest version _before_ 5.0.0!
 
 ----
 
@@ -23,7 +25,7 @@ The easiest way is to keep `wdio-chromedriver-service` as a devDependency in you
 ```json
 {
   "devDependencies": {
-    "wdio-chromedriver-service": "~0.1"
+    "wdio-chromedriver-service": "^5.0.0"
   }
 }
 ```
@@ -49,11 +51,14 @@ By design, only Google Chrome is available (when installed on the host system). 
 ```js
 // wdio.conf.js
 export.config = {
-  port: '9515',
+  // port to find chromedriver
+  port: 9515, // default
   path: '/',
   // ...
   services: ['chromedriver'],
-  chromeDriverArgs: ['--port=9999'],
+
+  // options
+  chromeDriverArgs: ['--port=9515'], // default
   chromeDriverLogs: './',
   // ...
 };
