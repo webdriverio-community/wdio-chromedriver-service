@@ -15,8 +15,16 @@ export default class ChromeDriverLauncher {
     }
 
     async onPrepare (config) {
-        this.chromeDriverArgs = config.chromeDriverArgs
+        this.chromeDriverArgs = config.chromeDriverArgs || []
         this.chromeDriverLogs = config.chromeDriverLogs
+
+        if (!this.chromeDriverArgs.find(arg => arg.startsWith('--port'))) {
+            this.chromeDriverArgs.push(`--port=${config.port}`)
+        }
+
+        if (!this.chromeDriverArgs.find(arg => arg.startsWith('--url-base'))) {
+            this.chromeDriverArgs.push(`--url-base=${config.path}`)
+        }
         
         this.process = await ChromeDriver.start(this.chromeDriverArgs, true)
 

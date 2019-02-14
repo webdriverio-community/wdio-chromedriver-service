@@ -52,13 +52,13 @@ By design, only Google Chrome is available (when installed on the host system). 
 // wdio.conf.js
 export.config = {
   // port to find chromedriver
-  port: 9515, // default
+  port: 9515, // default for ChromeDriver
   path: '/',
   // ...
   services: ['chromedriver'],
 
   // options
-  chromeDriverArgs: ['--port=9515'], // default
+  chromeDriverArgs: ['--port=9515', '--url-base=\'/\''], // default for ChromeDriver
   chromeDriverLogs: './',
   // ...
 };
@@ -68,6 +68,8 @@ export.config = {
 
 ### chromeDriverArgs
 Array of arguments to pass to the ChromeDriver executable, see [https://helpmanual.io/help/chromedriver](https://helpmanual.io/help/chromedriver).
+* `--port` will use wdioConfig.port if not specified
+* `--url-base` will used wdioConfig.path if not specified
 
 Type: `string[]`
 ### chromeDriverLogs
