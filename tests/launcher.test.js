@@ -20,13 +20,27 @@ describe('ChromeDriverLauncher launcher', () => {
 
             const config = {
                 chromeDriverLogs: './',
-                chromeDriverArgs: ['--port=9515']
+                chromeDriverArgs: ['--port=9515', '--url-base=\'/\'']
             }
 
             await Launcher.onPrepare(config)
 
             expect(Launcher.chromeDriverLogs).toBe(config.chromeDriverLogs)
-            expect(Launcher.chromeDriverArgs).toBe(config.chromeDriverArgs)
+            expect(Launcher.chromeDriverArgs).toEqual(config.chromeDriverArgs)
+        })
+
+        test('should set correct chromeDriverArgs', async () => {
+            const Launcher = new ChromeDriverLauncher()
+            Launcher._redirectLogStream = jest.fn()
+
+            const config = {
+                port: 9515,
+                path: '/'
+            }
+
+            await Launcher.onPrepare(config)
+
+            expect(Launcher.chromeDriverArgs).toEqual([`--port=${config.port}`, `--url-base=${config.path}`])
         })
 
         test('should set correct config properties when empty', async () => {
