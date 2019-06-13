@@ -32,7 +32,7 @@
     "url": "https://github.com/atti187/wdio-chromedriver-service/issues"
   },
   "peerDependencies": {
-    "chromedriver": "^2.45.0",
+    "chromedriver": "*",
     "@wdio/cli": "^5.0.0"
   },
   "dependencies": {
