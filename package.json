@@ -54,7 +54,7 @@
     "babel-jest": "^23.6.0",
     "babel-plugin-source-map-support": "^2.0.1",
     "chromedriver": "^2.45.0",
-    "eslint": "^2.5.1",
+    "eslint": "^6.6.0",
     "eslint-config-standard": "^5.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-promise": "^1.1.0",
