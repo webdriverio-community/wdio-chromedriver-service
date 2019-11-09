@@ -1,5 +1,5 @@
 export default {
-    start: jest.fn((args, returnPromise) => new Promise((resolve, reject) => { 
+    start: jest.fn(() => new Promise((resolve) => { 
         process.nextTick(() => resolve({
             stdout: {
                 pipe: jest.fn()
