@@ -1,6 +1,6 @@
 {
   "name": "wdio-chromedriver-service",
-  "version": "5.0.2",
+  "version": "6.0.0",
   "description": "WebdriverIO service to start & stop ChromeDriver",
   "author": "Mattias Ekstrand <mattias.ekstrand@gmail.com>",
   "homepage": "https://github.com/atti187/wdio-chromedriver-service#readme",
@@ -33,7 +33,7 @@
   },
   "peerDependencies": {
     "chromedriver": "*",
-    "@wdio/cli": "^5.0.0"
+    "@wdio/cli": "^6.0.0"
   },
   "dependencies": {
     "fs-extra": "^0.30.0"
@@ -66,7 +66,8 @@
     "wdio-mocha-framework": "^0.2.12"
   },
   "contributors": [
-    "Mattias Ekstrand <mattias.ekstrand@gmail.com>"
+    "Mattias Ekstrand <mattias.ekstrand@gmail.com>",
+    "Erwin Heitzman <erwin.heitzman@gmail.com>"
   ],
   "jest": {
     "testMatch": [
