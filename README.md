@@ -3,7 +3,10 @@ WDIO ChromeDriver Service
 
 (Based entirely on [wdio-selenium-standalone-service](https://github.com/webdriverio/webdriverio/tree/master/packages/wdio-selenium-standalone-service).)
 
-Note - starting with version 5.0.0, this service is targeted at WDIO v5. If you're working with WDIO v4, use latest version _before_ 5.0.0!
+Note:
+If you're working with WebdriverIO v6, use version 6.X.X\
+If you're working with WebdriverIO v5, use version 5.X.X\
+If you're working with WebdriverIO v4, use version 4.X.X\
 
 ----
 
@@ -25,7 +28,7 @@ The easiest way is to keep `wdio-chromedriver-service` as a devDependency in you
 ```json
 {
   "devDependencies": {
-    "wdio-chromedriver-service": "^5.0.0"
+    "wdio-chromedriver-service": "^6.0.0"
   }
 }
 ```
@@ -51,29 +54,51 @@ By design, only Google Chrome is available (when installed on the host system). 
 ```js
 // wdio.conf.js
 export.config = {
-  // port to find chromedriver
-  port: 9515, // default for ChromeDriver
-  path: '/',
+  outputDir: 'all-logs',
   // ...
-  services: ['chromedriver'],
-
-  // options
-  chromeDriverArgs: ['--port=9515', '--url-base=\'/\''], // default for ChromeDriver
-  chromeDriverLogs: './',
+  services: [
+    ['chromedriver', {
+        outputDir: 'driver-logs', // overwrites the config.outputDir
+    }]
+  ],
   // ...
 };
 ```
 
 ## Options
 
-### chromeDriverArgs
-Array of arguments to pass to the ChromeDriver executable, see [https://helpmanual.io/help/chromedriver](https://helpmanual.io/help/chromedriver).
-* `--port` will use wdioConfig.port if not specified
-* `--url-base` will used wdioConfig.path if not specified
+### port
+The port on which the driver should run on
 
-Type: `string[]`
-### chromeDriverLogs
-Path where all logs from the ChromeDriver server should be stored.
+Example: 7676
+
+Type: `number`
+
+### path
+The path on which the driver should run on
+
+Example:  `/wd/hub`
+
+Type: `string`
+
+### protocol
+The protocol on which the driver should use
+
+Example:  `http`
+
+Type: `string`
+
+### hostname
+The protocol on which the driver should use
+
+Example:  `localhost`
+
+Type: `string`
+
+### outputDir
+The path where the output of the ChromeDriver server should be stored (uses the config.outputDir by default when not set).
+
+Example: `driver-logs`
 
 Type: `string`
 
