@@ -96,7 +96,7 @@ Example:  `localhost`
 Type: `string`
 
 ### outputDir
-The path where the output of the ChromeDriver server should be stored.
+The path where the output of the ChromeDriver server should be stored (uses the config.outputDir by default when not set).
 
 Example: `driver-logs`
 
