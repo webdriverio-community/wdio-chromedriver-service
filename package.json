@@ -1,6 +1,6 @@
 {
   "name": "wdio-chromedriver-service",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "WebdriverIO service to start & stop ChromeDriver",
   "author": "Mattias Ekstrand <mattias.ekstrand@gmail.com>",
   "homepage": "https://github.com/atti187/wdio-chromedriver-service#readme",
@@ -10,7 +10,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "build": "run-s clean compile",
+    "build": "NODE_ENV=production run-s clean compile",
     "clean": "rimraf ./build",
     "compile": "babel src/ -d build/ --config-file ./babel.config.js",
     "test": "run-s test:*",
