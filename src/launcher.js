@@ -31,8 +31,6 @@ export default class ChromeDriverLauncher {
 
     async onPrepare() {
         this.args.forEach(argument => {
-            console.log('port: ', argument.includes('--port'))
-
             if (argument.includes('--port')) {
                 throw new Error('Argument "--port" already exists')
             }
