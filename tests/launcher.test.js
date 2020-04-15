@@ -10,6 +10,8 @@ jest.mock('fs-extra', () => ({
 
 const pipe = jest.fn()
 
+let config, options, capabilities, multiremoteCaps
+
 describe('ChromeDriverLauncher launcher', () => {
     beforeAll(() => {
         ChromeDriver.start = jest.fn().mockReturnValue({
@@ -18,13 +20,26 @@ describe('ChromeDriverLauncher launcher', () => {
         })
     })
 
+    beforeEach(() => {
+        config = {}
+        options = {}
+        capabilities = [
+            { browserName: 'chrome' },
+            { browserName: 'firefox' }
+        ]
+        multiremoteCaps = {
+            myCustomChromeBrowser: { browserName: 'chrome' },
+            myCustomFirefoxBrowser: { browserName: 'firefox' }
+        }
+    })
+
     afterEach(() => {
         jest.clearAllMocks()
     })
 
     describe('onPrepare', () => {
         test('should set correct starting options', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [{ browserName: 'chrome' }, { browserName: 'firefox' }], {})
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -33,7 +48,9 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should set (and overwrite config.outputDir) outputDir when passed in the options', async () => {
-            const Launcher = new ChromeDriverLauncher({ outputDir: 'options-outputdir'}, [], { outputDir: 'config-outputdir'})
+            options.outputDir = 'options-outputdir'
+            config.outputDir = 'config-outputdir'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -42,7 +59,8 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should set path when passed in the options', async () => {
-            const Launcher = new ChromeDriverLauncher({ path: 'options-path'}, [{ browserName: 'chrome' }, { browserName: 'firefox' }], {})
+            options.path = 'options-path'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -62,7 +80,8 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should set port when passed in the options', async () => {
-            const Launcher = new ChromeDriverLauncher({ port: 7676}, [{ browserName: 'chrome' }, { browserName: 'firefox' }], {})
+            options.port = 7676
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -82,7 +101,8 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should set protocol when passed in the options', async () => {
-            const Launcher = new ChromeDriverLauncher({ protocol: 'https'}, [{ browserName: 'chrome' }, { browserName: 'firefox' }], {})
+            options.protocol = 'https'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -102,7 +122,8 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should set hostname when passed in the options', async () => {
-            const Launcher = new ChromeDriverLauncher({ hostname: 'dummy'}, [{ browserName: 'chrome' }, { browserName: 'firefox' }], {})
+            options.hostname = 'dummy'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -121,8 +142,8 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set correct capabilities', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [{ browserName: 'chrome' }, { browserName: 'firefox' }], {})
+        test('should set capabilities', async () => {
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -141,8 +162,8 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set correct capabilities when using multiremote', async () => {
-            const Launcher = new ChromeDriverLauncher({}, { myCustomChromeBrowser: { browserName: 'chrome' }, myCustomFirefoxBrowser: { browserName: 'firefox' }}, {})
+        test('should set capabilities when using multiremote', async () => {
+            const Launcher = new ChromeDriverLauncher(options, multiremoteCaps, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -161,8 +182,13 @@ describe('ChromeDriverLauncher launcher', () => {
             })
         })
 
-        test('should set correct capabilities when the browserName is not lowercase', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [{ browserName: 'Chrome' }, { browserName: 'firefox' }], {})
+        test('should set capabilities when the browserName is not lowercase', async () => {
+            capabilities.map(cap => {
+                if (cap.browserName === 'chrome') {
+                    cap.browserName = 'Chrome'
+                }
+            })
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -182,7 +208,8 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should set correct config properties', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [], { outputDir: 'dummy'})
+            config.outputDir = 'dummy'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -190,31 +217,52 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(Launcher.outputDir).toEqual('dummy')
         })
 
-        test('should set correct chromeDriverArgs', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [], {})
+        test('should set correct port and path', async () => {
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
-            const config = {
-                port: 9515,
-                path: '/'
-            }
+            await Launcher.onPrepare()
 
-            await Launcher.onPrepare(config)
+            expect(Launcher.args).toEqual(['--port=9515', '--url-base=/'])
+        })
 
-            expect(Launcher.chromeDriverArgs).toEqual([`--port=${config.port}`, `--url-base=${config.path}`])
+        test('should set correct args', async () => {
+            options.args = ['--silent']
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()
+
+            await Launcher.onPrepare()
+
+            expect(Launcher.args).toEqual(['--silent', '--port=9515', '--url-base=/'])
+        })
+
+        test('should throw if the argument "--port" is passed', async () => {
+            options.args = ['--port=9616']
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()
+
+            await expect(Launcher.onPrepare()).rejects.toThrow(new Error('Argument "--port" already exists'))
+        })
+
+        test('should throw if the argument "--url-base" is passed', async () => {
+            options.args = ['--url-base=/dummy']
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()
+
+            await expect(Launcher.onPrepare()).rejects.toThrow(new Error('Argument "--url-base" already exists'))
         })
 
         test('should set correct config properties when empty', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [], {})
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare({})
 
-            expect(Launcher.chromeDriverArgs).toBeUndefined
+            expect(Launcher.args).toBeUndefined
         })
 
         test('should call ChromeDriver start', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [], {})
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -222,56 +270,8 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(ChromeDriver.start.mock.calls[0][0]).toEqual(['--port=9515', '--url-base=/'])
         })
 
-        test('should map the capabilities', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [{ browserName: 'chrome' }, { browserName: 'chrome' }], {})
-            Launcher._redirectLogStream = jest.fn()
-
-            await Launcher.onPrepare()
-
-            expect(Launcher.capabilities).toEqual([
-                {
-                    browserName: 'chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/'
-                },
-                {
-                    browserName: 'chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/'
-                },
-            ])
-        })
-
-        test('should map the capabilities using multiremote', async () => {
-            const Launcher = new ChromeDriverLauncher({}, { dummy1: { browserName: 'chrome' }, dummy2: { browserName: 'chrome' }  }, {})
-            Launcher._redirectLogStream = jest.fn()
-
-            await Launcher.onPrepare()
-
-            expect(Launcher.capabilities).toEqual({
-                dummy1: {
-                    browserName: 'chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/'
-                },
-                dummy2: {
-                    browserName: 'chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/'
-                },
-            })
-        })
-
         test('should not output the log file', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [], {})
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare({})
@@ -280,7 +280,8 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should output the log file', async () => {
-            const Launcher = new ChromeDriverLauncher({ outputDir: 'dummy' }, [], {})
+            options.outputDir = 'dummy'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare()
@@ -291,7 +292,7 @@ describe('ChromeDriverLauncher launcher', () => {
 
     describe('onComplete', () => {
         test('should call ChromeDriver.stop', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [], {})
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()
 
             await Launcher.onPrepare({})
@@ -302,7 +303,7 @@ describe('ChromeDriverLauncher launcher', () => {
         })
 
         test('should not call process.kill', () => {
-            const Launcher = new ChromeDriverLauncher({}, [], {})
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher.onComplete()
 
             expect(Launcher.process).toBeFalsy()
@@ -311,7 +312,8 @@ describe('ChromeDriverLauncher launcher', () => {
 
     describe('_redirectLogStream', () => {
         test('should write output to file', async () => {
-            const Launcher = new ChromeDriverLauncher({}, [], { outputDir: 'dummy'})
+            config.outputDir = 'dummy'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
 
             await Launcher.onPrepare()
 

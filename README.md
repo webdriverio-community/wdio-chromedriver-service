@@ -6,7 +6,6 @@ WDIO ChromeDriver Service
 Note:
 If you're working with WebdriverIO v6, use version 6.X.X\
 If you're working with WebdriverIO v5, use version 5.X.X\
-If you're working with WebdriverIO v4, use version 4.X.X\
 
 ----
 
@@ -59,6 +58,7 @@ export.config = {
   services: [
     ['chromedriver', {
         outputDir: 'driver-logs', // overwrites the config.outputDir
+        args: ['--silent'] //
     }]
   ],
   // ...
