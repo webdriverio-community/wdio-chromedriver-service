@@ -26,12 +26,21 @@ export default class ChromeDriverLauncher {
 
         this.outputDir = options.outputDir || config.outputDir
         this.capabilities = capabilities
-        this.chromeDriverArgs = []
+        this.args = options.args || []
     }
 
     async onPrepare() {
-        this.chromeDriverArgs.push(`--port=${this.options.port}`)
-        this.chromeDriverArgs.push(`--url-base=${this.options.path}`)
+        this.args.forEach(argument => {
+            if (argument.includes('--port')) {
+                throw new Error('Argument "--port" already exists')
+            }
+            if (argument.includes('--url-base')) {
+                throw new Error('Argument "--url-base" already exists')
+            }
+        })
+
+        this.args.push(`--port=${this.options.port}`)
+        this.args.push(`--url-base=${this.options.path}`)
 
         /**
          * update capability connection options to connect
@@ -39,7 +48,7 @@ export default class ChromeDriverLauncher {
          */
         this._mapCapabilities()
 
-        this.process = await ChromeDriver.start(this.chromeDriverArgs, true)
+        this.process = await ChromeDriver.start(this.args, true)
 
         if (typeof this.outputDir === 'string') {
             this._redirectLogStream()
