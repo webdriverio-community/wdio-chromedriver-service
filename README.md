@@ -78,7 +78,7 @@ Type: `number`
 ### path
 The path on which the driver should run on
 
-Example:  `/wd/hub`
+Example:  `/`
 
 Type: `string`
 
