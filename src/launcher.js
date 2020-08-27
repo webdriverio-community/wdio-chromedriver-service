@@ -75,7 +75,7 @@ export default class ChromeDriverLauncher {
         if (isMultiremote(this.capabilities)) {
             for (const cap in this.capabilities) {
                 if (isChrome(this.capabilities[cap].capabilities)) {
-                    Object.assign(this.capabilities[cap].capabilities, this.options)
+                    Object.assign(this.capabilities[cap], this.options)
                 }
             }
         } else {
