@@ -57,8 +57,9 @@ export.config = {
   // ...
   services: [
     ['chromedriver', {
+        logFileName: 'wdio-chromedriver.log', // default
         outputDir: 'driver-logs', // overwrites the config.outputDir
-        args: ['--silent'] //
+        args: ['--silent']
     }]
   ],
   // ...
@@ -102,7 +103,12 @@ Example: `driver-logs`
 
 Type: `string`
 
+### logFileName
+The name of the log file to be written in `outputDir`.
 
+Example: `wdio-chromedriver.log`
+
+Type: `string`
 
 ----
 
