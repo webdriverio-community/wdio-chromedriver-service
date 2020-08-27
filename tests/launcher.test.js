@@ -28,8 +28,16 @@ describe('ChromeDriverLauncher launcher', () => {
             { browserName: 'firefox' }
         ]
         multiremoteCaps = {
-            myCustomChromeBrowser: { browserName: 'chrome' },
-            myCustomFirefoxBrowser: { browserName: 'firefox' }
+            myCustomChromeBrowser: {
+                capabilities: {
+                    browserName: 'chrome'
+                }
+            },
+            myCustomFirefoxBrowser: {
+                capabilities: {
+                    browserName: 'firefox'
+                }
+            }
         }
     })
 
@@ -170,14 +178,18 @@ describe('ChromeDriverLauncher launcher', () => {
 
             expect(Launcher.capabilities).toEqual({
                 myCustomChromeBrowser: {
-                    browserName: 'chrome',
                     protocol: 'http',
                     hostname: 'localhost',
                     port: 9515,
-                    path: '/'
+                    path: '/',
+                    capabilities: {
+                        browserName: 'chrome',
+                    }
                 },
                 myCustomFirefoxBrowser: {
-                    browserName: 'firefox'
+                    capabilities: {
+                        browserName: 'firefox'
+                    }
                 }
             })
         })
@@ -317,7 +329,7 @@ describe('ChromeDriverLauncher launcher', () => {
 
             await Launcher.onPrepare()
 
-            expect(fs.createWriteStream.mock.calls[0][0]).toBe(path.join(process.cwd(), 'dummy', 'chromedriver.log'))
+            expect(fs.createWriteStream.mock.calls[0][0]).toBe(path.join(process.cwd(), 'dummy', 'wdio-chromedriver.log'))
             expect(Launcher.process.stdout.pipe).toBeCalled()
             expect(Launcher.process.stderr.pipe).toBeCalled()
         })
