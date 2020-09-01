@@ -3,7 +3,7 @@ import ChromeDriver from 'chromedriver'
 
 import getFilePath from './utils/getFilePath'
 
-const DEFAULT_LOG_FILENAME = 'chromedriver.log'
+const DEFAULT_LOG_FILENAME = 'wdio-chromedriver.log'
 
 const DEFAULT_CONNECTION = {
     protocol: 'http',
@@ -25,6 +25,7 @@ export default class ChromeDriverLauncher {
         }
 
         this.outputDir = options.outputDir || config.outputDir
+        this.logFileName = options.logFileName || DEFAULT_LOG_FILENAME
         this.capabilities = capabilities
         this.args = options.args || []
     }
@@ -60,7 +61,7 @@ export default class ChromeDriverLauncher {
     }
 
     _redirectLogStream() {
-        const logFile = getFilePath(this.outputDir, DEFAULT_LOG_FILENAME)
+        const logFile = getFilePath(this.outputDir, this.logFileName)
 
         // ensure file & directory exists
         fs.ensureFileSync(logFile)
@@ -73,7 +74,7 @@ export default class ChromeDriverLauncher {
     _mapCapabilities() {
         if (isMultiremote(this.capabilities)) {
             for (const cap in this.capabilities) {
-                if (isChrome(this.capabilities[cap])) {
+                if (isChrome(this.capabilities[cap].capabilities)) {
                     Object.assign(this.capabilities[cap], this.options)
                 }
             }
