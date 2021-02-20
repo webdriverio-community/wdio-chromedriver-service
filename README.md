@@ -4,9 +4,9 @@ WDIO ChromeDriver Service
 (Based entirely on [wdio-selenium-standalone-service](https://github.com/webdriverio/webdriverio/tree/master/packages/wdio-selenium-standalone-service).)
 
 Note:
-If you're working with WebdriverIO v6, use version 7.X.X\
-If you're working with WebdriverIO v6, use version 6.X.X\
-If you're working with WebdriverIO v5, use version 5.X.X\
+If you're working with WebdriverIO v7, use version 7.X.X
+If you're working with WebdriverIO v6, use version 6.X.X
+If you're working with WebdriverIO v5, use version 5.X.X
 
 ----
 
@@ -17,8 +17,8 @@ Obvisously, it only supports:
 
 ```js
 capabilities: [{
-        browserName: 'chrome'
-    }]
+    browserName: 'chrome'
+}]
 ```
 
 ## Installation
