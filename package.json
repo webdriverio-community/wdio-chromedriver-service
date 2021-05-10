@@ -3,7 +3,7 @@
   "version": "7.0.0",
   "description": "WebdriverIO service to start & stop ChromeDriver",
   "author": "Mattias Ekstrand <mattias.ekstrand@gmail.com>",
-  "homepage": "https://github.com/atti187/wdio-chromedriver-service#readme",
+  "homepage": "https://github.com/webdriverio-community/wdio-chromedriver-service#readme",
   "license": "MIT",
   "main": "./build",
   "engines": {
@@ -13,13 +13,17 @@
     "build": "NODE_ENV=production run-s clean compile",
     "clean": "rimraf ./build",
     "compile": "babel src/ -d build/ --config-file ./babel.config.js",
+    "release:ci": "npm run release -- --ci --npm.skipChecks --no-git.requireCleanWorkingDir",
+    "release:patch": "npm run release -- patch",
+    "release:minor": "npm run release -- minor",
+    "release:major": "npm run release -- major",
     "test": "run-s test:*",
     "test:eslint": "eslint src tests",
     "test:unit": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/atti187/wdio-chromedriver-service.git"
+    "url": "git://github.com/webdriverio-community/wdio-chromedriver-service.git"
   },
   "keywords": [
     "webdriverio",
@@ -29,7 +33,7 @@
     "tests"
   ],
   "bugs": {
-    "url": "https://github.com/atti187/wdio-chromedriver-service/issues"
+    "url": "https://github.com/webdriverio-community/wdio-chromedriver-service/issues"
   },
   "peerDependencies": {
     "chromedriver": "*",
@@ -57,6 +61,7 @@
     "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
     "npm-run-all": "^4.1.5",
+    "release-it": "^14.6.2",
     "rimraf": "^3.0.2"
   },
   "contributors": [

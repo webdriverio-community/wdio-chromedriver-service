@@ -1,7 +1,7 @@
 WDIO ChromeDriver Service
 ================================
 
-(Based entirely on [wdio-selenium-standalone-service](https://github.com/webdriverio/webdriverio/tree/master/packages/wdio-selenium-standalone-service).)
+(Based entirely on [wdio-selenium-standalone-service](https://github.com/webdriverio/webdriverio/tree/main/packages/wdio-selenium-standalone-service).)
 
 Note:\
 If you're working with WebdriverIO v7, use version 7.X.X\
