@@ -54,6 +54,10 @@ export default class ChromeDriverLauncher {
         if (typeof this.outputDir === 'string') {
             this._redirectLogStream()
         }
+
+        process.on('exit', this.onComplete)
+        process.on('SIGINT', this.onComplete)
+        process.on('uncaughtException', this.onComplete)
     }
 
     onComplete() {
