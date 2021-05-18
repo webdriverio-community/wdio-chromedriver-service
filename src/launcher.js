@@ -1,10 +1,18 @@
+import { spawn } from 'child_process'
 import fs from 'fs-extra'
-import ChromeDriver from 'chromedriver'
+
+import split2 from 'split2'
+import { path as chromedriverPath } from 'chromedriver'
+import logger from '@wdio/logger'
+import tcpPortUsed from 'tcp-port-used'
 
 import getFilePath from './utils/getFilePath'
 
-const DEFAULT_LOG_FILENAME = 'wdio-chromedriver.log'
+const log = logger('chromedriver')
 
+const DEFAULT_LOG_FILENAME = 'wdio-chromedriver.log'
+const POLL_INTERVAL = 100
+const POLL_TIMEOUT = 10000
 const DEFAULT_CONNECTION = {
     protocol: 'http',
     hostname: 'localhost',
@@ -14,6 +22,7 @@ const DEFAULT_CONNECTION = {
 
 const isMultiremote = obj => typeof obj === 'object' && !Array.isArray(obj)
 const isChrome = cap => cap.browserName.toLowerCase() === 'chrome'
+let process
 
 export default class ChromeDriverLauncher {
     constructor(options, capabilities, config) {
@@ -49,19 +58,32 @@ export default class ChromeDriverLauncher {
          */
         this._mapCapabilities()
 
-        this.process = await ChromeDriver.start(this.args, true)
+        let command = chromedriverPath
+        log.info(`Start Chromedriver (${command}) with args ${this.args.join(' ')}`)
+        if (!fs.existsSync(command)) {
+            log.warn('Could not find chromedriver in default path: ', command)
+            log.warn('Falling back to use global chromedriver bin')
+            command = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
+        }
+        this.process = process = spawn(command, this.args)
 
         if (typeof this.outputDir === 'string') {
             this._redirectLogStream()
+        } else {
+            this.process.stdout.pipe(split2()).on('data', log.info)
+            this.process.stderr.pipe(split2()).on('data', log.warn)
         }
 
+        await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
         process.on('exit', this.onComplete)
         process.on('SIGINT', this.onComplete)
         process.on('uncaughtException', this.onComplete)
     }
 
-    onComplete() {
-        ChromeDriver.stop()
+    onComplete () {
+        if (process) {
+            process.kill()
+        }
     }
 
     _redirectLogStream() {
