@@ -1,25 +1,24 @@
 import path from 'path'
 import fs from 'fs-extra'
-import ChromeDriver from 'chromedriver'
+import { spawn } from 'child_process'
 import ChromeDriverLauncher from '../src/launcher'
 
-jest.mock('fs-extra', () => ({
-    createWriteStream: jest.fn(),
-    ensureFileSync: jest.fn()
-}))
-
-const pipe = jest.fn()
+jest.mock('child_process', () => {
+    const stream = {}
+    stream.pipe = jest.fn().mockReturnValue(stream)
+    stream.on = jest.fn().mockReturnValue(stream)
+    return {
+        spawn: jest.fn().mockReturnValue({
+            stdout: stream,
+            stderr: stream,
+            kill: jest.fn()
+        })
+    }
+})
 
 let config, options, capabilities, multiremoteCaps
 
 describe('ChromeDriverLauncher launcher', () => {
-    beforeAll(() => {
-        ChromeDriver.start = jest.fn().mockReturnValue({
-            stdout: { pipe },
-            stderr: { pipe },
-        })
-    })
-
     beforeEach(() => {
         config = {}
         options = {}
@@ -52,7 +51,18 @@ describe('ChromeDriverLauncher launcher', () => {
 
             await Launcher.onPrepare()
 
-            expect(ChromeDriver.start.mock.calls[0][0]).toEqual(['--port=9515', '--url-base=/'])
+            expect(spawn.mock.calls[0][0]).toEqual('/some/local/chromedriver/path')
+            expect(spawn.mock.calls[0][1]).toEqual(['--port=9515', '--url-base=/'])
+        })
+
+        it('should fallback to global chromedriver', async () => {
+            fs.existsSync.mockReturnValueOnce(false)
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()
+
+            await Launcher.onPrepare()
+
+            expect(spawn.mock.calls[0][0]).toEqual('chromedriver')
         })
 
         test('should set (and overwrite config.outputDir) outputDir when passed in the options', async () => {
@@ -279,7 +289,7 @@ describe('ChromeDriverLauncher launcher', () => {
 
             await Launcher.onPrepare()
 
-            expect(ChromeDriver.start.mock.calls[0][0]).toEqual(['--port=9515', '--url-base=/'])
+            expect(spawn.mock.calls[0][1]).toEqual(['--port=9515', '--url-base=/'])
         })
 
         test('should not output the log file', async () => {
@@ -311,7 +321,7 @@ describe('ChromeDriverLauncher launcher', () => {
 
             Launcher.onComplete()
 
-            expect(ChromeDriver.stop).toBeCalled()
+            expect(Launcher.process.kill).toBeCalled()
         })
 
         test('should not call process.kill', () => {

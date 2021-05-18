@@ -22,7 +22,6 @@ const DEFAULT_CONNECTION = {
 
 const isMultiremote = obj => typeof obj === 'object' && !Array.isArray(obj)
 const isChrome = cap => cap.browserName.toLowerCase() === 'chrome'
-let process
 
 export default class ChromeDriverLauncher {
     constructor(options, capabilities, config) {
@@ -63,9 +62,9 @@ export default class ChromeDriverLauncher {
         if (!fs.existsSync(command)) {
             log.warn('Could not find chromedriver in default path: ', command)
             log.warn('Falling back to use global chromedriver bin')
-            command = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
+            command = process && process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
         }
-        this.process = process = spawn(command, this.args)
+        this.process = spawn(command, this.args)
 
         if (typeof this.outputDir === 'string') {
             this._redirectLogStream()
@@ -75,14 +74,14 @@ export default class ChromeDriverLauncher {
         }
 
         await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
-        process.on('exit', this.onComplete)
-        process.on('SIGINT', this.onComplete)
-        process.on('uncaughtException', this.onComplete)
+        process.on('exit', this.onComplete.bind(this))
+        process.on('SIGINT', this.onComplete.bind(this))
+        process.on('uncaughtException', this.onComplete.bind(this))
     }
 
     onComplete () {
-        if (process) {
-            process.kill()
+        if (this.process) {
+            this.process.kill()
         }
     }
 
