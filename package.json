@@ -13,6 +13,7 @@
     "build": "NODE_ENV=production run-s clean compile",
     "clean": "rimraf ./build",
     "compile": "babel src/ -d build/ --config-file ./babel.config.js",
+    "release": "release-it --github.release",
     "release:ci": "npm run release -- --ci --npm.skipChecks --no-git.requireCleanWorkingDir",
     "release:patch": "npm run release -- patch",
     "release:minor": "npm run release -- minor",
