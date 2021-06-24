@@ -21,7 +21,7 @@ const DEFAULT_CONNECTION = {
 }
 
 const isMultiremote = obj => typeof obj === 'object' && !Array.isArray(obj)
-const isChrome = cap => cap.browserName.toLowerCase() === 'chrome'
+const isChrome = cap => cap.browserName ? cap.browserName.toLowerCase() === 'chrome' : false
 
 export default class ChromeDriverLauncher {
     constructor(options, capabilities, config) {
@@ -79,7 +79,7 @@ export default class ChromeDriverLauncher {
         process.on('uncaughtException', this.onComplete.bind(this))
     }
 
-    onComplete () {
+    onComplete() {
         if (this.process) {
             this.process.kill()
         }
