@@ -21,7 +21,7 @@ const DEFAULT_CONNECTION = {
 }
 
 const isMultiremote = obj => typeof obj === 'object' && !Array.isArray(obj)
-const isChrome = cap => cap.browserName ? cap.browserName.toLowerCase() === 'chrome' : false
+const isChrome = cap => cap.browserName && cap.browserName.toLowerCase() === 'chrome'
 
 export default class ChromeDriverLauncher {
     constructor(options, capabilities, config) {
