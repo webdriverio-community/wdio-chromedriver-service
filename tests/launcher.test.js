@@ -36,6 +36,11 @@ describe('ChromeDriverLauncher launcher', () => {
                 capabilities: {
                     browserName: 'firefox'
                 }
+            },
+            myCustomAppium: {
+                capabilities: {
+                    'platformName': 'android',
+                }
             }
         }
     })
@@ -199,6 +204,11 @@ describe('ChromeDriverLauncher launcher', () => {
                 myCustomFirefoxBrowser: {
                     capabilities: {
                         browserName: 'firefox'
+                    }
+                },
+                myCustomAppium: {
+                    capabilities: {
+                        'platformName': 'android',
                     }
                 }
             })
