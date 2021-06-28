@@ -111,6 +111,14 @@ Example: `wdio-chromedriver.log`
 
 Type: `string`
 
+### chromedriverCustomPath
+To use a custome chromedriver different than the one installed through "chromedriver npm module", provide the path. 
+
+Example: `.chromedriver.exe or d:/driver/chromedriver.exe`
+
+Type: `string`
+
+
 ----
 
 For more information on WebdriverIO see the [homepage](http://webdriver.io).
