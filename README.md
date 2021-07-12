@@ -114,7 +114,7 @@ Type: `string`
 ### chromedriverCustomPath
 To use a custome chromedriver different than the one installed through "chromedriver npm module", provide the path. 
 
-Example: `.chromedriver.exe or d:/driver/chromedriver.exe`
+Example: `/path/to/chromedriver` (Linux / MacOS), `./chromedriver.exe` or `d:/driver/chromedriver.exe` (Windows)
 
 Type: `string`
 
