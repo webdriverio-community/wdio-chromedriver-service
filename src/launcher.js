@@ -1,6 +1,6 @@
 import { spawn } from 'child_process'
 import fs from 'fs-extra'
-
+import path from 'path'
 import split2 from 'split2'
 import { path as chromedriverPath } from 'chromedriver'
 import logger from '@wdio/logger'
@@ -36,6 +36,7 @@ export default class ChromeDriverLauncher {
         this.logFileName = options.logFileName || DEFAULT_LOG_FILENAME
         this.capabilities = capabilities
         this.args = options.args || []
+        this.chromedriverCustomPath = options.chromedriverCustomPath ? path.resolve(options.chromedriverCustomPath) : chromedriverPath
     }
 
     async onPrepare() {
@@ -57,7 +58,7 @@ export default class ChromeDriverLauncher {
          */
         this._mapCapabilities()
 
-        let command = chromedriverPath
+        let command = this.chromedriverCustomPath
         log.info(`Start Chromedriver (${command}) with args ${this.args.join(' ')}`)
         if (!fs.existsSync(command)) {
             log.warn('Could not find chromedriver in default path: ', command)

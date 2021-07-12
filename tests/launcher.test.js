@@ -354,4 +354,38 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(Launcher.process.stderr.pipe).toBeCalled()
         })
     })
+
+    describe('custom chromedriver Path', () => {
+        test('should select custom chromedriver path "chromedriver.exe"', async () => {
+            options.chromedriverCustomPath = 'chromedriver.exe'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()        
+            await Launcher.onPrepare()        
+            expect(Launcher.chromedriverCustomPath).toEqual(path.resolve(options.chromedriverCustomPath))
+        })
+
+        test('should select custom chromedriver path "c:\\chromedriver.exe"', async () => {
+            options.chromedriverCustomPath = 'c:\\chromedriver.exe'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()        
+            await Launcher.onPrepare()        
+            expect(Launcher.chromedriverCustomPath).toEqual(path.resolve(options.chromedriverCustomPath))
+        })
+
+        test('should select custom chromedriver path "./chromedriver.exe"', async () => {
+            options.chromedriverCustomPath = './chromedriver.exe'
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()        
+            await Launcher.onPrepare()        
+            expect(Launcher.chromedriverCustomPath).toEqual(path.resolve(options.chromedriverCustomPath))
+        })
+
+        test('should select default chromedriver path if no custome path provided"', async () => {
+            options.chromedriverCustomPath = undefined
+            const Launcher = new ChromeDriverLauncher(options, capabilities, config)
+            Launcher._redirectLogStream = jest.fn()        
+            await Launcher.onPrepare()        
+            expect(Launcher.chromedriverCustomPath).not.toBeUndefined
+        })
+    })
 })
