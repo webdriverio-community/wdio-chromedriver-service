@@ -118,4 +118,4 @@ Example: `/path/to/chromedriver` (Linux / MacOS), `./chromedriver.exe` or `d:/dr
 
 Type: `string`
 
-For more information on WebdriverIO see the [homepage](http://webdriver.io).
+For more information on WebdriverIO see the [homepage](https://webdriver.io).
