@@ -380,7 +380,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(Launcher.chromedriverCustomPath).toEqual(path.resolve(options.chromedriverCustomPath))
         })
 
-        test('should select default chromedriver path "./chromedriver.exe"', async () => {
+        test('should select default chromedriver path if no custome path provided"', async () => {
             options.chromedriverCustomPath = undefined
             const Launcher = new ChromeDriverLauncher(options, capabilities, config)
             Launcher._redirectLogStream = jest.fn()        
