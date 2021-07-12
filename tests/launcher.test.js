@@ -389,5 +389,3 @@ describe('ChromeDriverLauncher launcher', () => {
         })
     })
 })
-
-
