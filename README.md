@@ -117,3 +117,5 @@ To use a custome chromedriver different than the one installed through "chromedr
 Example: `/path/to/chromedriver` (Linux / MacOS), `./chromedriver.exe` or `d:/driver/chromedriver.exe` (Windows)
 
 Type: `string`
+
+For more information on WebdriverIO see the [homepage](http://webdriver.io).
