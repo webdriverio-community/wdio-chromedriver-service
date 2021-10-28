@@ -388,7 +388,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(Launcher.chromedriverCustomPath).not.toBeUndefined
         })
 
-        test('should throw if  chromedriver not installed and no custom path provided"', async () => {
+        test('should throw if chromedriver not installed and no custom path provided"', async () => {
             jest.mock('chromedriver', () => undefined)
             options.chromedriverCustomPath = undefined
             expect(() => new ChromeDriverLauncher(options, capabilities, config)).toThrow()
