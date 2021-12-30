@@ -63,7 +63,6 @@ typings/
 
 **/build
 /*.js
-*.d.ts
 !babel.config.js
 !.eslintrc.js
 .DS_Store
