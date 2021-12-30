@@ -40,11 +40,16 @@
   },
   "peerDependencies": {
     "chromedriver": "*",
-    "@wdio/cli": "^7.0.0"
+    "@wdio/cli": "^7.0.0",
+    "@wdio/types": "^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@wdio/types": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@wdio/logger": "^7.5.3",
-    "@wdio/types": "^7.16.11",
     "fs-extra": "^9.1.0",
     "split2": "^3.2.2"
   },
