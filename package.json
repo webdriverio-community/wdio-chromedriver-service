@@ -6,6 +6,7 @@
   "homepage": "https://github.com/webdriverio-community/wdio-chromedriver-service#readme",
   "license": "MIT",
   "main": "./build",
+  "types": "index.d.ts",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -43,6 +44,7 @@
   },
   "dependencies": {
     "@wdio/logger": "^7.5.3",
+    "@wdio/types": "^7.16.11",
     "fs-extra": "^9.1.0",
     "split2": "^3.2.2"
   },
