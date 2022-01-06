@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs-extra'
-import { spawn } from 'child_process'
+import {spawn} from 'child_process'
 import ChromeDriverLauncher from '../src/launcher'
 
 jest.mock('child_process', () => {
@@ -359,33 +359,39 @@ describe('ChromeDriverLauncher launcher', () => {
         test('should select custom chromedriver path "chromedriver.exe"', async () => {
             options.chromedriverCustomPath = 'chromedriver.exe'
             const Launcher = new ChromeDriverLauncher(options, capabilities, config)
-            Launcher._redirectLogStream = jest.fn()        
-            await Launcher.onPrepare()        
+            Launcher._redirectLogStream = jest.fn()
+            await Launcher.onPrepare()
             expect(Launcher.chromedriverCustomPath).toEqual(path.resolve(options.chromedriverCustomPath))
         })
 
         test('should select custom chromedriver path "c:\\chromedriver.exe"', async () => {
             options.chromedriverCustomPath = 'c:\\chromedriver.exe'
             const Launcher = new ChromeDriverLauncher(options, capabilities, config)
-            Launcher._redirectLogStream = jest.fn()        
-            await Launcher.onPrepare()        
+            Launcher._redirectLogStream = jest.fn()
+            await Launcher.onPrepare()
             expect(Launcher.chromedriverCustomPath).toEqual(path.resolve(options.chromedriverCustomPath))
         })
 
         test('should select custom chromedriver path "./chromedriver.exe"', async () => {
             options.chromedriverCustomPath = './chromedriver.exe'
             const Launcher = new ChromeDriverLauncher(options, capabilities, config)
-            Launcher._redirectLogStream = jest.fn()        
-            await Launcher.onPrepare()        
+            Launcher._redirectLogStream = jest.fn()
+            await Launcher.onPrepare()
             expect(Launcher.chromedriverCustomPath).toEqual(path.resolve(options.chromedriverCustomPath))
         })
 
         test('should select default chromedriver path if no custome path provided"', async () => {
             options.chromedriverCustomPath = undefined
             const Launcher = new ChromeDriverLauncher(options, capabilities, config)
-            Launcher._redirectLogStream = jest.fn()        
-            await Launcher.onPrepare()        
+            Launcher._redirectLogStream = jest.fn()
+            await Launcher.onPrepare()
             expect(Launcher.chromedriverCustomPath).not.toBeUndefined
+        })
+
+        test('should throw if chromedriver not installed and no custom path provided"', async () => {
+            jest.mock('chromedriver', () => undefined)
+            options.chromedriverCustomPath = undefined
+            expect(() => new ChromeDriverLauncher(options, capabilities, config)).toThrow()
         })
     })
 })

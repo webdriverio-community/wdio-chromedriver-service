@@ -2,7 +2,6 @@ import { spawn } from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
 import split2 from 'split2'
-import { path as chromedriverPath } from 'chromedriver'
 import logger from '@wdio/logger'
 import tcpPortUsed from 'tcp-port-used'
 
@@ -36,7 +35,7 @@ export default class ChromeDriverLauncher {
         this.logFileName = options.logFileName || DEFAULT_LOG_FILENAME
         this.capabilities = capabilities
         this.args = options.args || []
-        this.chromedriverCustomPath = options.chromedriverCustomPath ? path.resolve(options.chromedriverCustomPath) : chromedriverPath
+        this.chromedriverCustomPath = options.chromedriverCustomPath ? path.resolve(options.chromedriverCustomPath) : this._getChromedriverPath()
     }
 
     async onPrepare() {
@@ -110,6 +109,15 @@ export default class ChromeDriverLauncher {
                     Object.assign(cap, this.options)
                 }
             }
+        }
+    }
+
+    _getChromedriverPath() {
+        try {
+            return require('chromedriver').path
+        } catch (e) {
+            log.error('Can\'t load chromedriver, please define "chromedriverCustomPath" property or install dependency via "npm install chromedriver --save-dev"')
+            throw e
         }
     }
 }
