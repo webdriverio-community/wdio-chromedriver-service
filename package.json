@@ -1,6 +1,6 @@
 {
   "name": "wdio-chromedriver-service",
-  "version": "7.2.4",
+  "version": "7.2.5",
   "description": "WebdriverIO service to start & stop ChromeDriver",
   "author": "Mattias Ekstrand <mattias.ekstrand@gmail.com>",
   "homepage": "https://github.com/webdriverio-community/wdio-chromedriver-service#readme",
