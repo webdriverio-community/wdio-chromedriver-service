@@ -44,6 +44,9 @@
     "@wdio/types": "^7.0.0"
   },
   "peerDependenciesMeta": {
+    "chromedriver": {
+      "optional": true
+    },
     "@wdio/types": {
       "optional": true
     }
