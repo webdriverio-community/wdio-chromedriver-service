@@ -41,7 +41,8 @@
   "peerDependencies": {
     "chromedriver": "*",
     "@wdio/cli": "^7.0.0",
-    "@wdio/types": "^7.0.0"
+    "@wdio/types": "^7.0.0",
+    "webdriverio": "^7.0.0"
   },
   "peerDependenciesMeta": {
     "chromedriver": {
@@ -49,6 +50,9 @@
     },
     "@wdio/types": {
       "optional": true
+    },
+    "webdriverio": {
+      "optional": false
     }
   },
   "dependencies": {

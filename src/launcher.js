@@ -4,6 +4,7 @@ import path from 'path'
 import split2 from 'split2'
 import logger from '@wdio/logger'
 import tcpPortUsed from 'tcp-port-used'
+import { SevereServiceError } from 'webdriverio'
 
 import getFilePath from './utils/getFilePath'
 
@@ -73,7 +74,23 @@ export default class ChromeDriverLauncher {
             this.process.stderr.pipe(split2()).on('data', log.warn)
         }
 
-        await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
+        try {
+            await tcpPortUsed.waitUntilFree(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
+        } catch (err) {
+            throw new SevereServiceError(
+                `Couldn't start Chromedriver: ${err.message}\n` +
+                `Please check if port ${this.options.port} is in use!`
+            )
+        }
+
+        try {
+            await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
+        } catch (err) {
+            throw new SevereServiceError(
+                `Couldn't start Chromedriver: ${err.message}\n` +
+                'Chromedriver failed to start.')
+        }
+
         process.on('exit', this.onComplete.bind(this))
         process.on('SIGINT', this.onComplete.bind(this))
         process.on('uncaughtException', this.onComplete.bind(this))

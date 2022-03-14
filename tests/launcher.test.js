@@ -1,6 +1,8 @@
 import path from 'path'
 import fs from 'fs-extra'
 import {spawn} from 'child_process'
+import tcpPortUsed from 'tcp-port-used'
+
 import ChromeDriverLauncher from '../src/launcher'
 
 jest.mock('child_process', () => {
@@ -274,6 +276,20 @@ describe('ChromeDriverLauncher launcher', () => {
             Launcher._redirectLogStream = jest.fn()
 
             await expect(Launcher.onPrepare()).rejects.toThrow(new Error('Argument "--port" already exists'))
+        })
+
+        test('should throw if port is not free', async () => {
+            const launcher = new ChromeDriverLauncher(options, capabilities, config)
+            tcpPortUsed.waitUntilFree.mockRejectedValueOnce(new Error('timeout'))
+            const err = await launcher.onPrepare().catch((err) => err)
+            expect(err.message).toContain('Please check if port 9515 is in use!')
+        })
+
+        test('should throw if Chromedriver fails to start', async () => {
+            const launcher = new ChromeDriverLauncher(options, capabilities, config)
+            tcpPortUsed.waitUntilUsed.mockRejectedValueOnce(new Error('timeout'))
+            const err = await launcher.onPrepare().catch((err) => err)
+            expect(err.message).toContain('Chromedriver failed to start.')
         })
 
         test('should throw if the argument "--url-base" is passed', async () => {
