@@ -65,15 +65,10 @@ export default class ChromeDriverLauncher {
             log.warn('Falling back to use global chromedriver bin')
             command = process && process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
         }
-        this.process = spawn(command, this.args)
 
-        if (typeof this.outputDir === 'string') {
-            this._redirectLogStream()
-        } else {
-            this.process.stdout.pipe(split2()).on('data', log.info)
-            this.process.stderr.pipe(split2()).on('data', log.warn)
-        }
-
+        /**
+         * wait for port to be available before starting Chromedriver
+         */
         try {
             await tcpPortUsed.waitUntilFree(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
         } catch (err) {
@@ -81,6 +76,15 @@ export default class ChromeDriverLauncher {
                 `Couldn't start Chromedriver: ${err.message}\n` +
                 `Please check if port ${this.options.port} is in use!`
             )
+        }
+
+        this.process = spawn(command, this.args)
+
+        if (typeof this.outputDir === 'string') {
+            this._redirectLogStream()
+        } else {
+            this.process.stdout.pipe(split2()).on('data', log.info)
+            this.process.stderr.pipe(split2()).on('data', log.warn)
         }
 
         try {
