@@ -12,14 +12,21 @@ export declare interface ChromedriverServiceOptions {
 }
 
 export declare class ChromedriverServiceLauncher {
+    public chromedriverCustomPath: string;
+    public options: Pick<ChromedriverServiceOptions, 'protocol' | 'hostname' | 'port' | 'path'>;
+    public outputDir: string;
+    public logFileName: string;
+    public capabilities: Capabilities.Capabilities;
+    public args: string[];
+
     constructor(
         options: ChromedriverServiceOptions,
         capabilities: Capabilities.Capabilities,
         config: Omit<Options.Testrunner, "capabilities">
     );
 
-    onComplete(): void;
-    onPrepare(): void;
+    onComplete(...args: any[]): void;
+    onPrepare(...args: any[]): void;
 }
 
 export default class ChromeDriverService {}
