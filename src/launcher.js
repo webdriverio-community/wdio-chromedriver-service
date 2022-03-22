@@ -36,7 +36,7 @@ export default class ChromeDriverLauncher {
         this.logFileName = options.logFileName || DEFAULT_LOG_FILENAME
         this.capabilities = capabilities
         this.args = options.args || []
-        this.chromedriverCustomPath = options.chromedriverCustomPath ? path.resolve(options.chromedriverCustomPath) : this._getChromedriverPath()
+        this.chromedriverCustomPath = options.chromedriverCustomPath
     }
 
     async onPrepare() {
@@ -59,6 +59,8 @@ export default class ChromeDriverLauncher {
         this._mapCapabilities()
 
         let command = this.chromedriverCustomPath
+            ? path.resolve(this.chromedriverCustomPath)
+            : this._getChromedriverPath()
         log.info(`Start Chromedriver (${command}) with args ${this.args.join(' ')}`)
         if (!fs.existsSync(command)) {
             log.warn('Could not find chromedriver in default path: ', command)
@@ -138,7 +140,7 @@ export default class ChromeDriverLauncher {
             return require('chromedriver').path
         } catch (e) {
             log.error('Can\'t load chromedriver, please define "chromedriverCustomPath" property or install dependency via "npm install chromedriver --save-dev"')
-            throw e
+            throw new SevereServiceError(e.message)
         }
     }
 }
