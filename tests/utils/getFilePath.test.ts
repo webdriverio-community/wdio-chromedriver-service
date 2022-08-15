@@ -1,9 +1,10 @@
-import getFilePath from '../../src/utils/getFilePath'
-import path from 'path'
+import path from 'node:path'
+import { describe, test, expect, beforeAll } from 'vitest'
+import getFilePath from '../../src/utils/getFilePath.js'
 
 describe('getFilePath', () => {
-    let basePath = null
-    let defaultFilename = null
+    let basePath = ''
+    let defaultFilename = ''
 
     beforeAll(() => {
         basePath = process.cwd()

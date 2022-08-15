@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/",
+    "module": "ESNext",
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+    "strictBindCallApply": true,
+    "removeComments": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "strictPropertyInitialization": true,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "moduleResolution": "Node",
+    "types": [
+      "node",
+      "@wdio/globals/types"
+    ]
+  },
+  "include": [
+    "test/**/*.ts",
+    "src/**/*.ts",
+    "src/cjs/package.json"
+  ]
+}
