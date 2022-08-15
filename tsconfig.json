@@ -8,6 +8,8 @@
     "removeComments": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
     "strictPropertyInitialization": true,
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
