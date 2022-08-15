@@ -18,7 +18,8 @@
     ]
   },
   "include": [
-    "./test/**/*.ts",
-    "./src/**/*.ts"
+    "test/**/*.ts",
+    "src/**/*.ts",
+    "src/cjs/package.json"
   ]
 }

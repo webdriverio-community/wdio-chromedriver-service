@@ -1,9 +1,9 @@
-module.exports = class ChromeService {}
+exports.default = class ChromeService {}
 exports.launcher = class CJSChromedriverLauncher {
     private instance?: any
 
     constructor(options: any, capabilities: any, config: any) {
-        this.instance = import('./launcher.js').then((ChromedriverLauncher) => {
+        this.instance = import('../launcher.js').then((ChromedriverLauncher) => {
             return new ChromedriverLauncher.default(options, capabilities, config)
         })
     }
