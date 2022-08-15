@@ -52,10 +52,10 @@
     "watch": "npm run compile -- --watch"
   },
   "peerDependencies": {
-    "@wdio/cli": "next",
-    "@wdio/types": "next",
+    "@wdio/cli": "^7.0.0 || next",
+    "@wdio/types": "^7.0.0 || next",
     "chromedriver": "*",
-    "webdriverio": "next"
+    "webdriverio": "^7.0.0 || next"
   },
   "peerDependenciesMeta": {
     "chromedriver": {
