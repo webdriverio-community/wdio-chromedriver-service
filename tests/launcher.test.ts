@@ -1,10 +1,12 @@
 import path from 'node:path'
 import { spawn } from 'node:child_process'
-import { vi, describe, beforeEach, afterEach, test, it, expect } from 'vitest'
+import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest'
 import fs from 'fs-extra'
 import tcpPortUsed from 'tcp-port-used'
 
 import ChromeDriverLauncher from '../src/launcher.js'
+// @ts-expect-error cjs import
+import { launcher as CJSLauncher } from '../src/cjs/index.js'
 
 vi.mock('tcp-port-used')
 vi.mock('chromedriver')
@@ -57,12 +59,19 @@ describe('ChromeDriverLauncher launcher', () => {
     })
 
     describe('onPrepare', () => {
-        test('should set correct starting options', async () => {
+        it('should set correct starting options', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
 
             await launcher.onPrepare()
 
+            expect(vi.mocked(spawn).mock.calls[0][0]).toEqual('/some/local/chromedriver/path')
+            expect(vi.mocked(spawn).mock.calls[0][1]).toEqual(['--port=9515', '--url-base=/'])
+        })
+
+        it('should be able to do the same when using CJS module', async () => {
+            const launcher = new CJSLauncher(options, capabilities, config)
+            await launcher.onPrepare()
             expect(vi.mocked(spawn).mock.calls[0][0]).toEqual('/some/local/chromedriver/path')
             expect(vi.mocked(spawn).mock.calls[0][1]).toEqual(['--port=9515', '--url-base=/'])
         })
@@ -77,7 +86,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(vi.mocked(spawn).mock.calls[0][0]).toEqual('chromedriver')
         })
 
-        test('should set (and overwrite config.outputDir) outputDir when passed in the options', async () => {
+        it('should set (and overwrite config.outputDir) outputDir when passed in the options', async () => {
             options.outputDir = 'options-outputdir'
             config.outputDir = 'config-outputdir'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
@@ -88,7 +97,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['outputDir']).toEqual('options-outputdir')
         })
 
-        test('should set path when passed in the options', async () => {
+        it('should set path when passed in the options', async () => {
             options.path = 'options-path'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -109,7 +118,7 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set port when passed in the options', async () => {
+        it('should set port when passed in the options', async () => {
             options.port = 7676
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -130,7 +139,7 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set protocol when passed in the options', async () => {
+        it('should set protocol when passed in the options', async () => {
             options.protocol = 'https'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -151,7 +160,7 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set hostname when passed in the options', async () => {
+        it('should set hostname when passed in the options', async () => {
             options.hostname = 'dummy'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -172,7 +181,7 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set capabilities', async () => {
+        it('should set capabilities', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
 
@@ -192,7 +201,7 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set capabilities when using multiremote', async () => {
+        it('should set capabilities when using multiremote', async () => {
             const launcher = new ChromeDriverLauncher(options, multiremoteCaps, config)
             launcher._redirectLogStream = vi.fn()
 
@@ -221,7 +230,7 @@ describe('ChromeDriverLauncher launcher', () => {
             })
         })
 
-        test('should set capabilities when the browserName is not lowercase', async () => {
+        it('should set capabilities when the browserName is not lowercase', async () => {
             capabilities.map(cap => {
                 if (cap.browserName === 'chrome') {
                     cap.browserName = 'Chrome'
@@ -246,7 +255,7 @@ describe('ChromeDriverLauncher launcher', () => {
             ])
         })
 
-        test('should set correct config properties', async () => {
+        it('should set correct config properties', async () => {
             config.outputDir = 'dummy'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -256,7 +265,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['outputDir']).toEqual('dummy')
         })
 
-        test('should set correct port and path', async () => {
+        it('should set correct port and path', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
 
@@ -265,7 +274,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['args']).toEqual(['--port=9515', '--url-base=/'])
         })
 
-        test('should set correct args', async () => {
+        it('should set correct args', async () => {
             options.args = ['--silent']
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -275,7 +284,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['args']).toEqual(['--silent', '--port=9515', '--url-base=/'])
         })
 
-        test('should throw if the argument "--port" is passed', async () => {
+        it('should throw if the argument "--port" is passed', async () => {
             options.args = ['--port=9616']
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -283,21 +292,21 @@ describe('ChromeDriverLauncher launcher', () => {
             await expect(launcher.onPrepare()).rejects.toThrow(new Error('Argument "--port" already exists'))
         })
 
-        test('should throw if port is not free', async () => {
+        it('should throw if port is not free', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             vi.mocked(tcpPortUsed.waitUntilFree).mockRejectedValueOnce(new Error('timeout'))
             const err = await launcher.onPrepare().catch((err) => err)
             expect(err.message).toContain('Please check if port 9515 is in use!')
         })
 
-        test('should throw if Chromedriver fails to start', async () => {
+        it('should throw if Chromedriver fails to start', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             vi.mocked(tcpPortUsed.waitUntilUsed).mockRejectedValueOnce(new Error('timeout'))
             const err = await launcher.onPrepare().catch((err) => err)
             expect(err.message).toContain('Chromedriver failed to start.')
         })
 
-        test('should throw if the argument "--url-base" is passed', async () => {
+        it('should throw if the argument "--url-base" is passed', async () => {
             options.args = ['--url-base=/dummy']
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -305,7 +314,7 @@ describe('ChromeDriverLauncher launcher', () => {
             await expect(launcher.onPrepare()).rejects.toThrow(new Error('Argument "--url-base" already exists'))
         })
 
-        test('should set correct config properties when empty', async () => {
+        it('should set correct config properties when empty', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
 
@@ -314,7 +323,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['args']).toBeUndefined
         })
 
-        test('should call ChromeDriver start', async () => {
+        it('should call ChromeDriver start', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
 
@@ -323,7 +332,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(vi.mocked(spawn).mock.calls[0][1]).toEqual(['--port=9515', '--url-base=/'])
         })
 
-        test('should not output the log file', async () => {
+        it('should not output the log file', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
 
@@ -332,7 +341,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher._redirectLogStream).not.toBeCalled()
         })
 
-        test('should output the log file', async () => {
+        it('should output the log file', async () => {
             options.outputDir = 'dummy'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -344,7 +353,7 @@ describe('ChromeDriverLauncher launcher', () => {
     })
 
     describe('onComplete', () => {
-        test('should call ChromeDriver.stop', async () => {
+        it('should call ChromeDriver.stop', async () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
 
@@ -355,7 +364,7 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(vi.mocked(launcher['process']!).kill).toBeCalled()
         })
 
-        test('should not call process.kill', () => {
+        it('should not call process.kill', () => {
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher.onComplete()
 
@@ -364,7 +373,7 @@ describe('ChromeDriverLauncher launcher', () => {
     })
 
     describe('_redirectLogStream', () => {
-        test('should write output to file', async () => {
+        it('should write output to file', async () => {
             config.outputDir = 'dummy'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
 
@@ -377,7 +386,7 @@ describe('ChromeDriverLauncher launcher', () => {
     })
 
     describe('custom chromedriver Path', () => {
-        test('should select custom chromedriver path "chromedriver.exe"', async () => {
+        it('should select custom chromedriver path "chromedriver.exe"', async () => {
             options.chromedriverCustomPath = 'chromedriver.exe'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -388,7 +397,7 @@ describe('ChromeDriverLauncher launcher', () => {
             )
         })
 
-        test('should select custom chromedriver path "c:\\chromedriver.exe"', async () => {
+        it('should select custom chromedriver path "c:\\chromedriver.exe"', async () => {
             options.chromedriverCustomPath = 'c:\\chromedriver.exe'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -399,7 +408,7 @@ describe('ChromeDriverLauncher launcher', () => {
             )
         })
 
-        test('should select custom chromedriver path "./chromedriver.exe"', async () => {
+        it('should select custom chromedriver path "./chromedriver.exe"', async () => {
             options.chromedriverCustomPath = './chromedriver.exe'
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -410,7 +419,7 @@ describe('ChromeDriverLauncher launcher', () => {
             )
         })
 
-        test('should select default chromedriver path if no custom path provided"', async () => {
+        it('should select default chromedriver path if no custom path provided"', async () => {
             options.chromedriverCustomPath = undefined
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
             launcher._redirectLogStream = vi.fn()
@@ -424,7 +433,7 @@ describe('ChromeDriverLauncher launcher', () => {
         /**
          * dynamic changes of mock don't work in vitest
          */
-        test.skip('should throw if chromedriver not installed and no custom path provided"', async () => {
+        it.skip('should throw if chromedriver not installed and no custom path provided"', async () => {
             vi.mock('chromedriver', () => { throw new Error('not found') })
             delete options.chromedriverCustomPath
             const launcher = new ChromeDriverLauncher(options, capabilities, config)
