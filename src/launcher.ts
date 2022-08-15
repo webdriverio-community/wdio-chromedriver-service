@@ -1,12 +1,14 @@
-import { spawn } from 'child_process'
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
 import split2 from 'split2'
 import logger from '@wdio/logger'
 import tcpPortUsed from 'tcp-port-used'
 import { SevereServiceError } from 'webdriverio'
+import type { Capabilities, Options } from '@wdio/types'
 
-import getFilePath from './utils/getFilePath'
+import getFilePath from './utils/getFilePath.js'
+import type { ServiceOptions } from './types'
 
 const log = logger('chromedriver')
 
@@ -14,17 +16,29 @@ const DEFAULT_LOG_FILENAME = 'wdio-chromedriver.log'
 const POLL_INTERVAL = 100
 const POLL_TIMEOUT = 10000
 const DEFAULT_CONNECTION = {
-    protocol: 'http',
+    protocol: 'http' as const,
     hostname: 'localhost',
     port: 9515,
     path: '/'
 }
 
-const isMultiremote = obj => typeof obj === 'object' && !Array.isArray(obj)
-const isChrome = cap => cap.browserName && cap.browserName.toLowerCase() === 'chrome'
+const isMultiremote = (obj: Capabilities.Capabilities) => typeof obj === 'object' && !Array.isArray(obj)
+const isChrome = (cap: Capabilities.Capabilities) => cap.browserName && cap.browserName.toLowerCase() === 'chrome'
 
 export default class ChromeDriverLauncher {
-    constructor(options, capabilities, config) {
+    protected options: { protocol: 'http' | 'https', hostname: string, port: number, path: string }
+    protected outputDir?: string
+    protected logFileName: string
+    protected capabilities: Capabilities.Capabilities
+    protected args: string[]
+    protected chromedriverCustomPath?: string
+    private process?: ChildProcessWithoutNullStreams
+
+    constructor(
+        options: ServiceOptions,
+        capabilities: Capabilities.Capabilities,
+        config: Options.Testrunner
+    ) {
         this.options = {
             protocol: options.protocol || DEFAULT_CONNECTION.protocol,
             hostname: options.hostname || DEFAULT_CONNECTION.hostname,
@@ -60,7 +74,7 @@ export default class ChromeDriverLauncher {
 
         let command = this.chromedriverCustomPath
             ? path.resolve(this.chromedriverCustomPath)
-            : this._getChromedriverPath()
+            : await this._getChromedriverPath()
         log.info(`Start Chromedriver (${command}) with args ${this.args.join(' ')}`)
         if (!fs.existsSync(command)) {
             log.warn('Could not find chromedriver in default path: ', command)
@@ -83,7 +97,7 @@ export default class ChromeDriverLauncher {
         this.process = spawn(command, this.args)
 
         if (typeof this.outputDir === 'string') {
-            this._redirectLogStream()
+            this._redirectLogStream(this.process, this.outputDir)
         } else {
             this.process.stdout.pipe(split2()).on('data', log.info)
             this.process.stderr.pipe(split2()).on('data', log.warn)
@@ -108,26 +122,26 @@ export default class ChromeDriverLauncher {
         }
     }
 
-    _redirectLogStream() {
-        const logFile = getFilePath(this.outputDir, this.logFileName)
+    _redirectLogStream(process: ChildProcessWithoutNullStreams, outputDir: string) {
+        const logFile = getFilePath(outputDir, this.logFileName)
 
         // ensure file & directory exists
         fs.ensureFileSync(logFile)
 
         const logStream = fs.createWriteStream(logFile, { flags: 'w' })
-        this.process.stdout.pipe(logStream)
-        this.process.stderr.pipe(logStream)
+        process.stdout.pipe(logStream)
+        process.stderr.pipe(logStream)
     }
 
     _mapCapabilities() {
         if (isMultiremote(this.capabilities)) {
             for (const cap in this.capabilities) {
-                if (isChrome(this.capabilities[cap].capabilities)) {
-                    Object.assign(this.capabilities[cap], this.options)
+                if (isChrome((this.capabilities as any)[cap].capabilities)) {
+                    Object.assign((this.capabilities as Capabilities.MultiRemoteCapabilities)[cap], this.options)
                 }
             }
         } else {
-            for (const cap of this.capabilities) {
+            for (const cap of (this.capabilities as Capabilities.DesiredCapabilities[])) {
                 if (isChrome(cap)) {
                     Object.assign(cap, this.options)
                 }
@@ -135,9 +149,9 @@ export default class ChromeDriverLauncher {
         }
     }
 
-    _getChromedriverPath() {
+    async _getChromedriverPath() {
         try {
-            return require('chromedriver').path
+            return (await import('chromedriver')).path
         } catch (e) {
             log.error('Can\'t load chromedriver, please define "chromedriverCustomPath" property or install dependency via "npm install chromedriver --save-dev"')
             throw new SevereServiceError(e.message)
