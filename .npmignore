@@ -4,3 +4,7 @@ coverage
 babel.config.js
 ChromeDriver.txt
 .*
+__mocks__
+tsconfig.json
+vitest.conf.ts
+*.tgz
