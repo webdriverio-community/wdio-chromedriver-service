@@ -1,6 +1,7 @@
-import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
+import path from 'node:path'
+import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
+
 import fs from 'fs-extra'
-import path from 'path'
 import split2 from 'split2'
 import logger from '@wdio/logger'
 import tcpPortUsed from 'tcp-port-used'
@@ -8,6 +9,7 @@ import { SevereServiceError } from 'webdriverio'
 import type { Capabilities, Options } from '@wdio/types'
 
 import getFilePath from './utils/getFilePath.js'
+import { pkg } from './constants.js'
 import type { ServiceOptions } from './types'
 
 const log = logger('chromedriver')
@@ -39,6 +41,7 @@ export default class ChromeDriverLauncher {
         capabilities: Capabilities.Capabilities,
         config: Options.Testrunner
     ) {
+        log.info(`Initiate Chromedriver Launcher (v${pkg.version})`)
         this.options = {
             protocol: options.protocol || DEFAULT_CONNECTION.protocol,
             hostname: options.hostname || DEFAULT_CONNECTION.hostname,
@@ -97,7 +100,7 @@ export default class ChromeDriverLauncher {
         this.process = spawn(command, this.args)
 
         if (typeof this.outputDir === 'string') {
-            this._redirectLogStream(this.process, this.outputDir)
+            await this._redirectLogStream(this.process, this.outputDir)
         } else {
             this.process.stdout.pipe(split2()).on('data', log.info)
             this.process.stderr.pipe(split2()).on('data', log.warn)
@@ -122,11 +125,11 @@ export default class ChromeDriverLauncher {
         }
     }
 
-    _redirectLogStream(process: ChildProcessWithoutNullStreams, outputDir: string) {
+    async _redirectLogStream(process: ChildProcessWithoutNullStreams, outputDir: string) {
         const logFile = getFilePath(outputDir, this.logFileName)
 
         // ensure file & directory exists
-        fs.ensureFileSync(logFile)
+        await fs.ensureFile(logFile)
 
         const logStream = fs.createWriteStream(logFile, { flags: 'w' })
         process.stdout.pipe(logStream)
@@ -136,7 +139,7 @@ export default class ChromeDriverLauncher {
     _mapCapabilities() {
         if (isMultiremote(this.capabilities)) {
             for (const cap in this.capabilities) {
-                if (isChrome((this.capabilities as any)[cap].capabilities)) {
+                if (isChrome((this.capabilities as Capabilities.MultiRemoteCapabilities)[cap].capabilities as Capabilities.Capabilities)) {
                     Object.assign((this.capabilities as Capabilities.MultiRemoteCapabilities)[cap], this.options)
                 }
             }
