@@ -52,7 +52,6 @@
     "watch": "npm run compile -- --watch"
   },
   "peerDependencies": {
-    "@wdio/cli": "^7.0.0 || ^8.0.0-alpha.219",
     "@wdio/types": "^7.0.0 || ^8.0.0-alpha.219",
     "chromedriver": "*",
     "webdriverio": "^7.0.0 || ^8.0.0-alpha.219"
