@@ -45,7 +45,7 @@
     "build": "run-s clean compile copy",
     "clean": "rimraf ./build",
     "compile": "tsc --build tsconfig.json",
-    "copy": "cp src/cjs/package.json build/cjs",
+    "copy": "shx cp src/cjs/package.json build/cjs",
     "test": "run-s test:*",
     "test:eslint": "eslint src tests",
     "test:unit": "vitest",
@@ -89,6 +89,7 @@
     "npm-run-all": "^4.1.5",
     "release-it": "^15.5.0",
     "rimraf": "^3.0.2",
+    "shx": "^0.3.4",
     "typescript": "^4.8.4",
     "vitest": "0.25.2"
   }
