@@ -39,7 +39,7 @@ npm install chromedriver --save-dev
 npm install chromedriver@104 --save-dev
 ```
 
-Instructions on how to install `WebdriverIO` can be found [here.](http://webdriver.io/guide/getstarted/install.html)
+Instructions on how to install `WebdriverIO` can be found [here.](https://webdriver.io/docs/gettingstarted)
 
 ## Configuration
 
