@@ -77,7 +77,6 @@ Example:  `/`
 
 Type: `string`
 
-
 ### protocol
 The protocol on which the driver should use
 
@@ -93,9 +92,9 @@ Example:  `localhost`
 Type: `string`
 
 ### pollTimeout
-The startup timeout in ms, it checks if the port is open before starting ChromeDriver Server and then checks again if the chromedriver port is closed after starting ChromeDriver Server.
+The startup timeout in ms, it checks if the port is open before starting ChromeDriver and then checks again if the it is closed after starting it.
 
-Example: 10000
+Example: `10000`
 
 Type: `number`
 
