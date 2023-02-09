@@ -8,6 +8,10 @@ export interface ServiceOptions {
      */
     path?: string
     /**
+     * The startup timeout in ms, it if the port is open checks before starting and then checks again if the chromedriver port is closed after starting.
+     */
+    pollTimeout?: number
+    /**
      * The protocol on which the driver should use
      */
     protocol?: 'http' | 'https'

@@ -77,6 +77,7 @@ Example:  `/`
 
 Type: `string`
 
+
 ### protocol
 The protocol on which the driver should use
 
@@ -90,6 +91,13 @@ The protocol on which the driver should use
 Example:  `localhost`
 
 Type: `string`
+
+### pollTimeout
+The startup timeout in ms, it if the port is open checks before starting and then checks again if the chromedriver port is closed after starting.
+
+Example: 10000
+
+Type: `number`
 
 ### outputDir
 The path where the output of the ChromeDriver server should be stored (uses the config.outputDir by default when not set).
