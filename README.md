@@ -93,7 +93,7 @@ Example:  `localhost`
 Type: `string`
 
 ### pollTimeout
-The startup timeout in ms, it if the port is open checks before starting and then checks again if the chromedriver port is closed after starting.
+The startup timeout in ms, it checks if the port is open before starting ChromeDriver Server and then checks again if the chromedriver port is closed after starting ChromeDriver Server.
 
 Example: 10000
 
