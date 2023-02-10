@@ -29,6 +29,16 @@ vi.mock('child_process', () => {
 let config, options, capabilities, multiremoteCaps
 
 describe('ChromeDriverLauncher launcher', () => {
+    
+    const defaultOptions = {
+        defaultLogFileName: 'wdio-chromedriver.log',
+        defaultProtocol: 'http',
+        defaultHostname: 'localhost',
+        defaultPort: 9515,
+        defaultPath: '/',
+        defaultPollTimeOut: 10000,
+    }
+
     beforeEach(() => {
         config = {}
         options = {}
@@ -106,9 +116,10 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['capabilities']).toEqual([
                 {
                     browserName: 'chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
+                    protocol: defaultOptions.defaultProtocol,
+                    hostname: defaultOptions.defaultHostname,
+                    port: defaultOptions.defaultPort,
+                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: 'options-path'
                 },
                 {
@@ -127,10 +138,11 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['capabilities']).toEqual([
                 {
                     browserName: 'chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
+                    protocol: defaultOptions.defaultProtocol,
+                    hostname: defaultOptions.defaultHostname,
                     port: 7676,
-                    path: '/'
+                    pollTimeout:defaultOptions.defaultPollTimeOut,
+                    path: defaultOptions.defaultPath
                 },
                 {
                     browserName: 'firefox'
@@ -149,9 +161,10 @@ describe('ChromeDriverLauncher launcher', () => {
                 {
                     browserName: 'chrome',
                     protocol: 'https',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/'
+                    hostname: defaultOptions.defaultHostname,
+                    port: defaultOptions.defaultPort,
+                    pollTimeout:defaultOptions.defaultPollTimeOut,
+                    path: defaultOptions.defaultPath
                 },
                 {
                     browserName: 'firefox'
@@ -169,10 +182,33 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['capabilities']).toEqual([
                 {
                     browserName: 'chrome',
-                    protocol: 'http',
+                    protocol: defaultOptions.defaultProtocol,
                     hostname: 'dummy',
-                    port: 9515,
-                    path: '/'
+                    port: defaultOptions.defaultPort,
+                    pollTimeout:defaultOptions.defaultPollTimeOut,
+                    path: defaultOptions.defaultPath
+                },
+                {
+                    browserName: 'firefox'
+                }
+            ])
+        })
+
+        it('should set pollTimeout when passed in the options', async () => {
+            options.pollTimeout = 15000
+            const launcher = new ChromeDriverLauncher(options, capabilities, config)
+            launcher._redirectLogStream = vi.fn()
+
+            await launcher.onPrepare()
+
+            expect(launcher['capabilities']).toEqual([
+                {
+                    browserName: 'chrome',
+                    protocol: defaultOptions.defaultProtocol,
+                    hostname: defaultOptions.defaultHostname,
+                    port: defaultOptions.defaultPort,
+                    pollTimeout: 15000,
+                    path: defaultOptions.defaultPath
                 },
                 {
                     browserName: 'firefox'
@@ -189,10 +225,11 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['capabilities']).toEqual([
                 {
                     browserName: 'chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/'
+                    protocol: defaultOptions.defaultProtocol,
+                    hostname: defaultOptions.defaultHostname,
+                    port: defaultOptions.defaultPort,
+                    pollTimeout:defaultOptions.defaultPollTimeOut,
+                    path: defaultOptions.defaultPath
                 },
                 {
                     browserName: 'firefox'
@@ -208,10 +245,11 @@ describe('ChromeDriverLauncher launcher', () => {
 
             expect(launcher['capabilities']).toEqual({
                 myCustomChromeBrowser: {
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/',
+                    protocol: defaultOptions.defaultProtocol,
+                    hostname: defaultOptions.defaultHostname,
+                    port: defaultOptions.defaultPort,
+                    pollTimeout:defaultOptions.defaultPollTimeOut,
+                    path: defaultOptions.defaultPath,
                     capabilities: {
                         browserName: 'chrome',
                     }
@@ -243,10 +281,11 @@ describe('ChromeDriverLauncher launcher', () => {
             expect(launcher['capabilities']).toEqual([
                 {
                     browserName: 'Chrome',
-                    protocol: 'http',
-                    hostname: 'localhost',
-                    port: 9515,
-                    path: '/'
+                    protocol: defaultOptions.defaultProtocol,
+                    hostname: defaultOptions.defaultHostname,
+                    port: defaultOptions.defaultPort,
+                    pollTimeout:defaultOptions.defaultPollTimeOut,
+                    path: defaultOptions.defaultPath
                 },
                 {
                     browserName: 'firefox'
