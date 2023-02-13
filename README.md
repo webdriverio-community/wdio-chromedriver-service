@@ -91,6 +91,13 @@ Example:  `localhost`
 
 Type: `string`
 
+### pollTimeout
+The startup timeout in ms, it checks if the port is open before starting ChromeDriver and then checks again if the it is closed after starting it.
+
+Example: `10000`
+
+Type: `number`
+
 ### outputDir
 The path where the output of the ChromeDriver server should be stored (uses the config.outputDir by default when not set).
 

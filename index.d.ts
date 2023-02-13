@@ -5,6 +5,7 @@ export declare interface ChromedriverServiceOptions {
     hostname?: string;
     port?: string;
     path?: string;
+    pollTimeout?: number;
     outputDir?: string;
     logFileName?: string;
     args?: string[];
@@ -13,7 +14,7 @@ export declare interface ChromedriverServiceOptions {
 
 export declare class ChromedriverServiceLauncher {
     public chromedriverCustomPath: string;
-    public options: Pick<ChromedriverServiceOptions, 'protocol' | 'hostname' | 'port' | 'path'>;
+    public options: Pick<ChromedriverServiceOptions, 'protocol' | 'hostname' | 'port' | 'path' | 'pollTimeout'>;
     public outputDir: string;
     public logFileName: string;
     public capabilities: Capabilities.Capabilities;

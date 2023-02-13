@@ -16,7 +16,7 @@ const log = logger('chromedriver')
 
 const DEFAULT_LOG_FILENAME = 'wdio-chromedriver.log'
 const POLL_INTERVAL = 100
-const POLL_TIMEOUT = 10000
+const DEFAULT_POLL_TIMEOUT = 10000
 const DEFAULT_CONNECTION = {
     protocol: 'http' as const,
     hostname: 'localhost',
@@ -28,7 +28,7 @@ const isMultiremote = (obj: Capabilities.Capabilities) => typeof obj === 'object
 const isChrome = (cap: Capabilities.Capabilities) => cap.browserName && cap.browserName.toLowerCase() === 'chrome'
 
 export default class ChromeDriverLauncher {
-    protected options: { protocol: 'http' | 'https', hostname: string, port: number, path: string }
+    protected options: { protocol: 'http' | 'https', hostname: string, port: number, path: string, pollTimeout: number }
     protected outputDir?: string
     protected logFileName: string
     protected capabilities: Capabilities.Capabilities
@@ -47,6 +47,7 @@ export default class ChromeDriverLauncher {
             hostname: options.hostname || DEFAULT_CONNECTION.hostname,
             port: options.port || DEFAULT_CONNECTION.port,
             path: options.path || DEFAULT_CONNECTION.path,
+            pollTimeout: options.pollTimeout || DEFAULT_POLL_TIMEOUT
         }
 
         this.outputDir = options.outputDir || config.outputDir
@@ -89,7 +90,7 @@ export default class ChromeDriverLauncher {
          * wait for port to be available before starting Chromedriver
          */
         try {
-            await tcpPortUsed.waitUntilFree(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
+            await tcpPortUsed.waitUntilFree(this.options.port, POLL_INTERVAL, this.options.pollTimeout)
         } catch (err) {
             throw new SevereServiceError(
                 `Couldn't start Chromedriver: ${err.message}\n` +
@@ -107,7 +108,7 @@ export default class ChromeDriverLauncher {
         }
 
         try {
-            await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, POLL_TIMEOUT)
+            await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, this.options.pollTimeout)
         } catch (err) {
             throw new SevereServiceError(
                 `Couldn't start Chromedriver: ${err.message}\n` +
