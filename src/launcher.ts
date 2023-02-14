@@ -28,13 +28,14 @@ const isMultiremote = (obj: Capabilities.Capabilities) => typeof obj === 'object
 const isChrome = (cap: Capabilities.Capabilities) => cap.browserName && cap.browserName.toLowerCase() === 'chrome'
 
 export default class ChromeDriverLauncher {
-    protected options: { protocol: 'http' | 'https', hostname: string, port: number, path: string, pollTimeout: number }
+    protected options: { protocol: 'http' | 'https', hostname: string, port: number, path: string }
     protected outputDir?: string
     protected logFileName: string
     protected capabilities: Capabilities.Capabilities
     protected args: string[]
     protected chromedriverCustomPath?: string
     private process?: ChildProcessWithoutNullStreams
+    #pollTimeout: number
 
     constructor(
         options: ServiceOptions,
@@ -42,12 +43,12 @@ export default class ChromeDriverLauncher {
         config: Options.Testrunner
     ) {
         log.info(`Initiate Chromedriver Launcher (v${pkg.version})`)
+        this.#pollTimeout = options.pollTimeout || DEFAULT_POLL_TIMEOUT
         this.options = {
             protocol: options.protocol || DEFAULT_CONNECTION.protocol,
             hostname: options.hostname || DEFAULT_CONNECTION.hostname,
             port: options.port || DEFAULT_CONNECTION.port,
-            path: options.path || DEFAULT_CONNECTION.path,
-            pollTimeout: options.pollTimeout || DEFAULT_POLL_TIMEOUT
+            path: options.path || DEFAULT_CONNECTION.path
         }
 
         this.outputDir = options.outputDir || config.outputDir
@@ -90,7 +91,7 @@ export default class ChromeDriverLauncher {
          * wait for port to be available before starting Chromedriver
          */
         try {
-            await tcpPortUsed.waitUntilFree(this.options.port, POLL_INTERVAL, this.options.pollTimeout)
+            await tcpPortUsed.waitUntilFree(this.options.port, POLL_INTERVAL, this.#pollTimeout)
         } catch (err) {
             throw new SevereServiceError(
                 `Couldn't start Chromedriver: ${err.message}\n` +
@@ -108,7 +109,7 @@ export default class ChromeDriverLauncher {
         }
 
         try {
-            await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, this.options.pollTimeout)
+            await tcpPortUsed.waitUntilUsed(this.options.port, POLL_INTERVAL, this.#pollTimeout)
         } catch (err) {
             throw new SevereServiceError(
                 `Couldn't start Chromedriver: ${err.message}\n` +

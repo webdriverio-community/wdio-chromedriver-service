@@ -29,7 +29,7 @@ vi.mock('child_process', () => {
 let config, options, capabilities, multiremoteCaps
 
 describe('ChromeDriverLauncher launcher', () => {
-    
+
     const defaultOptions = {
         defaultLogFileName: 'wdio-chromedriver.log',
         defaultProtocol: 'http',
@@ -119,7 +119,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: defaultOptions.defaultProtocol,
                     hostname: defaultOptions.defaultHostname,
                     port: defaultOptions.defaultPort,
-                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: 'options-path'
                 },
                 {
@@ -141,7 +140,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: defaultOptions.defaultProtocol,
                     hostname: defaultOptions.defaultHostname,
                     port: 7676,
-                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: defaultOptions.defaultPath
                 },
                 {
@@ -163,7 +161,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: 'https',
                     hostname: defaultOptions.defaultHostname,
                     port: defaultOptions.defaultPort,
-                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: defaultOptions.defaultPath
                 },
                 {
@@ -185,7 +182,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: defaultOptions.defaultProtocol,
                     hostname: 'dummy',
                     port: defaultOptions.defaultPort,
-                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: defaultOptions.defaultPath
                 },
                 {
@@ -207,7 +203,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: defaultOptions.defaultProtocol,
                     hostname: defaultOptions.defaultHostname,
                     port: defaultOptions.defaultPort,
-                    pollTimeout: 15000,
                     path: defaultOptions.defaultPath
                 },
                 {
@@ -228,7 +223,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: defaultOptions.defaultProtocol,
                     hostname: defaultOptions.defaultHostname,
                     port: defaultOptions.defaultPort,
-                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: defaultOptions.defaultPath
                 },
                 {
@@ -248,7 +242,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: defaultOptions.defaultProtocol,
                     hostname: defaultOptions.defaultHostname,
                     port: defaultOptions.defaultPort,
-                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: defaultOptions.defaultPath,
                     capabilities: {
                         browserName: 'chrome',
@@ -284,7 +277,6 @@ describe('ChromeDriverLauncher launcher', () => {
                     protocol: defaultOptions.defaultProtocol,
                     hostname: defaultOptions.defaultHostname,
                     port: defaultOptions.defaultPort,
-                    pollTimeout:defaultOptions.defaultPollTimeOut,
                     path: defaultOptions.defaultPath
                 },
                 {
