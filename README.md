@@ -1,7 +1,7 @@
 WDIO ChromeDriver Service
 =========================
 
-This service helps you to run ChromeDriver seamlessly when running tests with the [WDIO testrunner](http://webdriver.io/guide/testrunner/gettingstarted.html). It uses the [chromedriver](https://www.npmjs.com/package/chromedriver) NPM package that wraps the ChromeDriver for you.
+This service helps you to run ChromeDriver seamlessly when running tests with the [WDIO testrunner](http://webdriver.io/guide/testrunner/gettingstarted.html). It uses the [chromedriver](https://www.npmjs.com/package/chromedriver) NPM package that wraps ChromeDriver for you.
 
 __Note:__ this service does not require a Selenium server, but uses ChromeDriver to communicate with the browser directly.
 
@@ -25,13 +25,13 @@ The easiest way is to keep `wdio-chromedriver-service` as a devDependency in you
 }
 ```
 
-You can simple do it by:
+You can do it by:
 
 ```bash
 npm install wdio-chromedriver-service --save-dev
 ```
 
-__Note:__ You have to install [chromedriver](https://www.npmjs.com/package/chromedriver)  separately, as it's a peerDependency of this project, and you're free to choose what version to use. Depending of which version of Chrome you have installed on your system you should install the same version of `chromedriver`. Install it using:
+__Note:__ You have to install [chromedriver](https://www.npmjs.com/package/chromedriver) separately, as it's a peerDependency of this project, and you're free to choose which version to use. Depending of which version of Chrome you have installed on your system you should install the same version of `chromedriver`. Install it using:
 
 ```bash
 npm install chromedriver --save-dev
@@ -39,7 +39,7 @@ npm install chromedriver --save-dev
 npm install chromedriver@104 --save-dev
 ```
 
-Instructions on how to install `WebdriverIO` can be found [here.](https://webdriver.io/docs/gettingstarted)
+Instructions on how to install `WebdriverIO` can be found [here](https://webdriver.io/docs/gettingstarted).
 
 ## Configuration
 
@@ -113,7 +113,7 @@ Example: `wdio-chromedriver.log`
 Type: `string`
 
 ### chromedriverCustomPath
-To use a custome chromedriver different than the one installed through "chromedriver npm module", provide the path.
+To use a custom chromedriver different than the one installed through the "chromedriver npm module", provide the path.
 
 Example: `/path/to/chromedriver` (Linux / MacOS), `./chromedriver.exe` or `d:/driver/chromedriver.exe` (Windows)
 
