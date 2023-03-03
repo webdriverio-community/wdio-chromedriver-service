@@ -73,21 +73,21 @@ Type: `number`
 ### path
 The path on which the driver should run on
 
-Example:  `/`
+Example: `/`
 
 Type: `string`
 
 ### protocol
 The protocol on which the driver should use
 
-Example:  `http`
+Example: `http`
 
 Type: `string`
 
 ### hostname
 The protocol on which the driver should use
 
-Example:  `localhost`
+Example: `localhost`
 
 Type: `string`
 
