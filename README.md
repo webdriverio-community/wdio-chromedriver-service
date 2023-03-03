@@ -66,7 +66,7 @@ export.config = {
 ### port
 The port on which the driver should run on
 
-Example: 7676
+Example: 9515
 
 Type: `number`
 
