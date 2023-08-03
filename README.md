@@ -1,3 +1,5 @@
+⚠️ __DEPRECATION WARNING:__ This service got deprecated and is no longer maintained. If you use WebdriverIO __v8.14__ or higher. We recommend to remove the service as dependency and from your WebdriverIO configuration as it is no longer needed. For more information, please read [this blog post](https://webdriver.io/blog/2023/07/31/driver-management).
+
 WDIO ChromeDriver Service
 =========================
 
